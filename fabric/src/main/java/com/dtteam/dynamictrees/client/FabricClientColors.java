@@ -25,6 +25,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -50,8 +51,8 @@ public final class FabricClientColors {
                 }
                 int rootsColor = (level != null && pos != null) ? roots.rootColor(state, level, pos) : 0xFFFFFF;
                 tintValues.size(2);
-                tintValues.set(0, foliage);
-                tintValues.set(1, rootsColor);
+                tintValues.set(0, ARGB.opaque(foliage));
+                tintValues.set(1, ARGB.opaque(rootsColor));
             }, roots);
         }
 
@@ -61,7 +62,7 @@ public final class FabricClientColors {
             if (level != null && pos != null && state.getBlock() instanceof PottedSaplingBlock) {
                 color = potted.getSpecies(level, pos).saplingColorMultiplier(state, level, pos, 0);
             }
-            tintValues.add(color);
+            tintValues.add(ARGB.opaque(color));
         }, potted);
 
         for (Species species : Species.REGISTRY) {
@@ -73,8 +74,8 @@ public final class FabricClientColors {
                     wood = species.saplingColorMultiplier(state, level, pos, 1);
                 }
                 tintValues.size(2);
-                tintValues.set(0, leaf);
-                tintValues.set(1, wood);
+                tintValues.set(0, ARGB.opaque(leaf));
+                tintValues.set(1, ARGB.opaque(wood));
             }, sapling));
         }
 
@@ -90,10 +91,11 @@ public final class FabricClientColors {
                     color = properties.foliageColorMultiplier(state, level, pos);
                     bark = properties.getFamily().woodBarkColor;
                 }
+                // Tints are ARGB in 26.2, so plain RGB colors must be made opaque or they render invisible
                 tintValues.size(3);
-                tintValues.set(0, color);
+                tintValues.set(0, ARGB.opaque(color));
                 tintValues.set(1, 0xFFFFFFFF);
-                tintValues.set(2, bark);
+                tintValues.set(2, ARGB.opaque(bark));
             }, leaves);
         }
     }
@@ -150,7 +152,7 @@ public final class FabricClientColors {
     public static int primitiveLeavesColor(BlockState primitiveLeaves, @Nullable BlockGetter level, @Nullable BlockPos pos) {
         BlockTintSource source = Minecraft.getInstance().getBlockColors().getTintSource(primitiveLeaves, 0);
         if (source == null) {
-            return 0x48B518;
+            return -1; // Untinted, like vanilla leaves without a tint source (e.g. cherry and pale oak)
         }
         if (level instanceof BlockAndTintGetter tintLevel && pos != null) {
             return source.colorInWorld(primitiveLeaves, tintLevel, pos);

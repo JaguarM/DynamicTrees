@@ -51,7 +51,7 @@ public class BlockColorMultipliers {
     public static int primitiveLeavesColor(BlockState primitiveLeaves, @Nullable BlockGetter level, @Nullable BlockPos pos) {
         BlockTintSource source = Minecraft.getInstance().getBlockColors().getTintSource(primitiveLeaves, 0);
         if (source == null) {
-            return 0x48B518;
+            return -1; // Untinted, like vanilla leaves without a tint source (e.g. cherry and pale oak)
         }
         if (level instanceof BlockAndTintGetter tintLevel && pos != null) {
             return source.colorInWorld(primitiveLeaves, tintLevel, pos);
