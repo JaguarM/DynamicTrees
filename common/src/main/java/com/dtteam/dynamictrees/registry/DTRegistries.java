@@ -301,7 +301,12 @@ public class DTRegistries {
             .registerStructurePoolElementType("tree_pool_element", () -> () -> TreePoolElement.CODEC);
 
     public static final Supplier<RecipeSerializer<SeedConversionRecipe>> SEED_CONVERSION_RECIPE_TYPE = Services.REGISTRY.getRegistryLoader()
-            .registerRecipeType("seed_conversion", ()->new RecipeSerializer<>(MapCodec.unit(new SeedConversionRecipe()), StreamCodec.unit(new SeedConversionRecipe())));
+            .registerRecipeType("seed_conversion", ()->unitSerializer(new SeedConversionRecipe()));
     public static final Supplier<RecipeSerializer<MegaSeedRecipe>> MEGA_SEED_RECIPE_TYPE = Services.REGISTRY.getRegistryLoader()
-            .registerRecipeType("mega_seed", ()->new RecipeSerializer<>(MapCodec.unit(new MegaSeedRecipe()), StreamCodec.unit(new MegaSeedRecipe())));
+            .registerRecipeType("mega_seed", ()->unitSerializer(new MegaSeedRecipe()));
+
+    // StreamCodec.unit only encodes the exact instance it was given, so both codecs must share the same one
+    private static <T extends Recipe<?>> RecipeSerializer<T> unitSerializer(T instance) {
+        return new RecipeSerializer<>(MapCodec.unit(instance), StreamCodec.unit(instance));
+    }
 }

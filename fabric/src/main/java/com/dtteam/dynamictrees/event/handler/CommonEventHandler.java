@@ -13,6 +13,7 @@ import com.dtteam.dynamictrees.treepack.Resources;
 import com.dtteam.dynamictrees.worldgen.BiomeDatabases;
 import com.dtteam.dynamictrees.worldgen.feature.DynamicTreeFeature;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -68,6 +69,8 @@ public class CommonEventHandler {
         });
 
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new FabricReloadListener());
+        // Item components are only bound again after a data reload, so deferred item stacks are created here
+        CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> com.dtteam.dynamictrees.compat.DeferredItemStacks.flush());
 
     }
 

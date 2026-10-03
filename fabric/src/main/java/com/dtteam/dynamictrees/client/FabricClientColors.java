@@ -11,6 +11,7 @@ import com.dtteam.dynamictrees.tree.TreeHelper;
 import com.dtteam.dynamictrees.tree.family.Family;
 import com.dtteam.dynamictrees.tree.species.Species;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.block.BlockTintSource;
@@ -191,7 +192,7 @@ public final class FabricClientColors {
     private static int averageSpriteColor(Identifier spriteId, int fallback) {
         try {
             TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager()
-                    .getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS)
+                    .getAtlasOrThrow(AtlasIds.BLOCKS)
                     .getSprite(spriteId);
             TextureHelper.PixelBuffer buffer = new TextureHelper.PixelBuffer(sprite);
             int u = Math.max(1, buffer.w / 16);

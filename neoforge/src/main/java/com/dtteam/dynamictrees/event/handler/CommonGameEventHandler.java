@@ -2,6 +2,7 @@ package com.dtteam.dynamictrees.event.handler;
 
 import com.dtteam.dynamictrees.DynamicTrees;
 import com.dtteam.dynamictrees.command.DTCommand;
+import com.dtteam.dynamictrees.compat.DeferredItemStacks;
 import com.dtteam.dynamictrees.recipe.DendroPotionRecipeHandler;
 import com.dtteam.dynamictrees.systems.FutureBreak;
 import com.dtteam.dynamictrees.systems.season.SeasonCompatibilityHandler;
@@ -15,6 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
@@ -33,6 +35,15 @@ public class CommonGameEventHandler {
             FutureBreak.process(event.getLevel());
         }
         SeasonHelper.updateTick(event.getLevel(), event.getLevel().getOverworldClockTime());
+    }
+
+    /**
+     * Item components are only bound again after a data reload has applied, so item stacks
+     * from tree packs that couldn't be created during the reload are created here.
+     */
+    @SubscribeEvent
+    public static void onTagsUpdated(TagsUpdatedEvent event) {
+        DeferredItemStacks.flush();
     }
 
     @SubscribeEvent

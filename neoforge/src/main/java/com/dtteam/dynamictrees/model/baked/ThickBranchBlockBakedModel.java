@@ -81,7 +81,8 @@ public class ThickBranchBlockBakedModel extends BasicBranchBlockBakedModel {
                 }
                 Vector3f from = new Vector3f((float) partBoundary.minX, (float) partBoundary.minY, (float) partBoundary.minZ);
                 Vector3f to = new Vector3f((float) partBoundary.maxX, (float) partBoundary.maxY, (float) partBoundary.maxZ);
-                float[] uvs = faceUvs(face, partBoundary);
+                // UVs are taken relative to the part's own block so they stay within the 0-16 texture bounds
+                float[] uvs = faceUvs(face, partBoundary.move(scaledOffset.reverse()));
                 quads.add(CuboidQuadBaker.bake(baker, from, to, face, uvs[0], uvs[1], uvs[2], uvs[3],
                         CuboidQuadBaker.faceAngle(Direction.Axis.Y, face), material));
             }

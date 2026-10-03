@@ -10,7 +10,6 @@ import com.dtteam.dynamictrees.utility.NullUtils;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +43,8 @@ public final class FruitResourceLoader extends JsonRegistryResourceLoader<Fruit>
         this.setupAppliers.register("item_stack", Item.class, (fruit, item) -> com.dtteam.dynamictrees.compat.DeferredItemStacks.setWhenBound(fruit::setItemStack, item));
 
         this.reloadAppliers
-                .register("item_stack", ItemStack.class, Fruit::setItemStack)
+                // Components aren't bound yet while data reloads, so the stack may need to be created later
+                .register("item_stack", Item.class, (fruit, item) -> com.dtteam.dynamictrees.compat.DeferredItemStacks.setWhenBound(fruit::setItemStack, item))
                 .register("can_bone_meal", Boolean.class, Fruit::setCanBoneMeal)
                 .register("growth_chance", Float.class, Fruit::setGrowthChance)
                 .register("required_production_factor", Float.class, Fruit::setRequiredProductionFactor)

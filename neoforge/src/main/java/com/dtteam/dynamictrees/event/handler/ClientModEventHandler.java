@@ -18,6 +18,7 @@ import com.dtteam.dynamictrees.model.loader.DummyUnbakedModelLoader;
 import com.dtteam.dynamictrees.registry.DTRegistries;
 import com.dtteam.dynamictrees.tree.family.Family;
 import com.dtteam.dynamictrees.tree.species.Species;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
@@ -68,7 +69,7 @@ public class ClientModEventHandler {
     }
 
     private static int averageSpriteColor(Identifier spriteId, int fallback) {
-        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS).getSprite(spriteId);
+        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(spriteId);
         if (sprite == null) {
             return fallback;
         }

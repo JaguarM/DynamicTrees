@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +49,8 @@ public final class PodResourceLoader extends JsonRegistryResourceLoader<Pod> {
         this.setupAppliers.register("item_stack", Item.class, (pod, item) -> com.dtteam.dynamictrees.compat.DeferredItemStacks.setWhenBound(pod::setItemStack, item));
 
         this.reloadAppliers
-                .register("item_stack", ItemStack.class, Pod::setItemStack)
+                // Components aren't bound yet while data reloads, so the stack may need to be created later
+                .register("item_stack", Item.class, (pod, item) -> com.dtteam.dynamictrees.compat.DeferredItemStacks.setWhenBound(pod::setItemStack, item))
                 .register("can_bone_meal", Boolean.class, Pod::setCanBoneMeal)
                 .register("growth_chance", Float.class, Pod::setGrowthChance)
                 .register("required_production_factor", Float.class, Pod::setRequiredProductionFactor)
